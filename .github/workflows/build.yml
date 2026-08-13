@@ -5,16 +5,18 @@ on: [push]
 jobs:
   build:
     runs-on: windows-latest
+    
     steps:
+      # 1. Checkout your code
       - uses: actions/checkout@v4
-      
-      - name: Compile Chatbot
-        run: g++ -static main.cpp -o my_chatbot.exe
-      
-      - name: Upload EXE
-        uses: actions/upload-artifact@v4  # Updated from v3 to v4
+
+      # 2. Install MSYS2 (which contains g++)
+      - name: Install MSYS2 and GCC
+        uses: msys2/setup-msys2@v2
         with:
-          name: chatbot-download
-          path: my_chatbot.exe
-          # Optional: Keep the file for 30 days (default is 90)
-          retention-days: 30    
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+
+      # 3. Add the compiler to the PATH
+      - name: Add GCC to PATH
+        shell: m   
